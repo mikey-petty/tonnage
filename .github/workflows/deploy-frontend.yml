@@ -31,6 +31,6 @@ jobs:
       - name: Release to Heroku
         uses: heroku/actions@v2
         with:
-          app: ${{ secrets.HEROKU_APP_NAME }}
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          app: ${{ secrets.HEROKU_APP_NAME }}
           command: container:release web
