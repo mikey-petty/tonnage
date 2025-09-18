@@ -1,0 +1,24 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches:
+      - feature/TON-5-init-frontend
+
+env:
+  HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+  HEROKU_APP_NAME: ${{secrets.HEROKU_APP_NAME}}
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "24"
+          cache: "npm"
+          cache-dependency-path: apps/frontend/package-lock.json
+      - name: Run E2E Tests
+        run: npm run test:e2e
+        working-directory: apps/frontend

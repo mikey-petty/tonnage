@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/TON-5-init-frontend
 
 env:
   HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
