@@ -1,0 +1,22 @@
+services:
+  frontend-dev:
+    profiles: ["dev"]
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./apps/frontend:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev", "--", "--host"]
+
+  frontend-prod:
+    profiles: ["prod"]
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile.prod
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
