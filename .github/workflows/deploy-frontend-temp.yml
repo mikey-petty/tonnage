@@ -15,10 +15,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
-        # with:
-        #   node-version: "24"
-        #   cache: "npm"
-        #   cache-dependency-path: apps/frontend/package-lock.json
+        with:
+          node-version: "24"
+          cache: "npm"
+          cache-dependency-path: apps/frontend/package-lock.json
 
       - run: npm ci
         working-directory: apps/frontend
@@ -26,6 +26,14 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
         working-directory: apps/frontend
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-pw-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-pw-
 
       - name: Run E2E Tests
         run: npm run test:e2e
