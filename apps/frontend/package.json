@@ -7,6 +7,9 @@
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "type-check": "npx tsc --build --force",
+    "format:check": "prettier --check .",
+    "ci": "echo \"No tests yet...\" && exit 0",
     "preview": "vite preview"
   },
   "dependencies": {
