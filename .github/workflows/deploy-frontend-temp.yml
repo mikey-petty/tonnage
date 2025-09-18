@@ -19,6 +19,10 @@ jobs:
           node-version: "24"
           cache: "npm"
           cache-dependency-path: apps/frontend/package-lock.json
+
+      - run: npm ci
+        working-directory: apps/frontend
+
       - name: Run E2E Tests
         run: npm run test:e2e
         working-directory: apps/frontend
