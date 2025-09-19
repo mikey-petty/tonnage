@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feat/TON-7-init-backend
 
 env:
   HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
@@ -86,6 +87,10 @@ jobs:
       - name: Run E2E Tests
         run: npm run test:e2e
         working-directory: apps/frontend
+        env:
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:8080
+          PLAYWRIGHT_WEB_COMMAND: npm run start
+          PLAYWRIGHT_WEB_URL: http://127.0.0.1:8080
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}

@@ -5,9 +5,9 @@ services:
       context: ./apps/backend
       dockerfile: Dockerfile.dev
     container_name: backend-dev
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:${DJANGO_PORT}
     ports:
-      - "8000:8000"
+      - "${DJANGO_PORT}:${DJANGO_PORT}"
     env_file:
       - .env
     volumes:
@@ -23,6 +23,10 @@ services:
     volumes:
       - ./apps/frontend:/app
       - /app/node_modules
+    env_file:
+      - .env
+    depends_on:
+      - backend-dev
     command: ["npm", "run", "dev", "--", "--host"]
 
   backend-prod:
@@ -32,10 +36,12 @@ services:
       dockerfile: Dockerfile.prod
     container_name: backend-prod
     ports:
-      - "8000:8000"
+      - "${DJANGO_PORT}:${DJANGO_PORT}"
     restart: always
     env_file:
       - .env.prod
+    environment:
+      - PORT=${DJANGO_PORT}
 
   frontend-prod:
     profiles: ["prod"]
@@ -43,10 +49,10 @@ services:
       context: ./apps/frontend
       dockerfile: Dockerfile.prod
     ports:
-      - "8080:8080"
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     environment:
-      - PORT=8080
+      - PORT=${FRONTEND_PORT}
     env_file:
-      - .env.prod
+      - .env
     depends_on:
       - backend-prod
