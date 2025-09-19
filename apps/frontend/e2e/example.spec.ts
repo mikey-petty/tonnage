@@ -2,12 +2,12 @@ import { test, expect } from "@playwright/test";
 
 test("has url", async ({ page }) => {
   await page.route("**/api/hello/", (route) =>
-    route.fulfill({ json: { message: "Hello from mock!" } })
+    route.fulfill({ json: { message: "Hello from mock!" } }),
   );
   await page.goto(process.env.PLAYWRIGHT_WEB_URL || "http://localhost:5173");
 
   await expect(page).toHaveURL(
-    process.env.PLAYWRIGHT_WEB_URL || "http://localhost:5173"
+    process.env.PLAYWRIGHT_WEB_URL || "http://localhost:5173",
   );
 
   const button = await page.getByTestId("count");
