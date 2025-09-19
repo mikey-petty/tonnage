@@ -1,26 +1,4 @@
 services:
-  frontend-dev:
-    profiles: ["dev"]
-    build:
-      context: ./apps/frontend
-      dockerfile: Dockerfile.dev
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./apps/frontend:/app
-      - /app/node_modules
-    command: ["npm", "run", "dev", "--", "--host"]
-
-  frontend-prod:
-    profiles: ["prod"]
-    build:
-      context: ./apps/frontend
-      dockerfile: Dockerfile.prod
-    ports:
-      - "8080:8080"
-    environment:
-      - PORT=8080
-
   backend-dev:
     profiles: ["dev"]
     build:
@@ -34,3 +12,41 @@ services:
       - .env
     volumes:
       - ./apps/backend:/app
+
+  frontend-dev:
+    profiles: ["dev"]
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./apps/frontend:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev", "--", "--host"]
+
+  backend-prod:
+    profiles: ["prod"]
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile.prod
+    container_name: backend-prod
+    ports:
+      - "8000:8000"
+    restart: always
+    env_file:
+      - .env.prod
+
+  frontend-prod:
+    profiles: ["prod"]
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile.prod
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+    env_file:
+      - .env.prod
+    depends_on:
+      - backend-prod
