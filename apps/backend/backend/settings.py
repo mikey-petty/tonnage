@@ -11,19 +11,22 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+REPO_ROOT_DIR = BASE_DIR.parent.parent
 
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+env.read_env(REPO_ROOT_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-&1+qsjo7q8hgo4r#idydwe$9!#bwy+42ql(kvh5c%^wco6s&(-"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = env("DJANGO_SECRET_KEY")
+DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = []
 
@@ -56,11 +59,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5173",  # Vite dev server
-    "http://localhost:5173",
-]
-
+CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default=[])
 
 ROOT_URLCONF = "backend.urls"
 
