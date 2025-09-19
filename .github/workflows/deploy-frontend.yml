@@ -59,7 +59,7 @@ jobs:
 
   e2e-test:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
