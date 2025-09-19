@@ -10,5 +10,16 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
+    hmr: {
+      host: "localhost",
+      port: 5173,
+    },
+    proxy: {
+      "/api": {
+        target: "http://backend-dev:8000",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
 });

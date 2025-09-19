@@ -28,7 +28,7 @@ env.read_env(REPO_ROOT_DIR / ".env")
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=[])
 
 
 # Application definition
