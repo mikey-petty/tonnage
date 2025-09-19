@@ -89,7 +89,7 @@ jobs:
         working-directory: apps/frontend
         env:
           PLAYWRIGHT_BASE_URL: http://127.0.0.1:8080
-          PLAYWRIGHT_WEB_COMMAND: npm run start
+          PLAYWRIGHT_WEB_COMMAND: npm run dev
           PLAYWRIGHT_WEB_URL: http://127.0.0.1:8080
 
       - uses: actions/upload-artifact@v4
