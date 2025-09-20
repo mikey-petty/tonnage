@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
+
 class TestHelloApi(TestCase):
     def test_hello_endpoint_returns_message(self):
         # Call the endpoint
