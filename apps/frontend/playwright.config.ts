@@ -77,7 +77,7 @@ export default defineConfig({
   webServer: {
     command: process.env.PLAYWRIGHT_WEB_COMMAND || "npm run dev",
     url: process.env.PLAYWRIGHT_WEB_URL,
-    timeout: 120 * 1000,
+    timeout: 60 * 1000,
     reuseExistingServer: !process.env.CI,
   },
 });
