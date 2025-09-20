@@ -40,8 +40,6 @@ services:
     restart: always
     env_file:
       - .env
-    environment:
-      - PORT=${DJANGO_PORT}
 
   frontend-prod:
     profiles: ["prod"]
