@@ -17,9 +17,7 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent
 REPO_ROOT_DIR = BASE_DIR.parent.parent
 
-env = environ.Env(
-    DEBUG=(bool, False)
-)
+env = environ.Env(DEBUG=(bool, False))
 env.read_env(REPO_ROOT_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
