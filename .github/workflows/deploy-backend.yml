@@ -32,6 +32,6 @@ jobs:
           python manage.py test
         env:
           DEBUG: "False"
-          SECRET_KEY: dummy-secret
+          DJANGO_SECRET_KEY: dummy-secret
           DJANGO_SETTINGS_MODULE: backend.settings # update to your project
           ALLOWED_HOSTS: localhost,127.0.0.1
