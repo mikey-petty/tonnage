@@ -33,6 +33,12 @@ ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+CSRF_TRUSTED_ORIGINS = env("DJANGO_CSRF_TRUSTED_ORIGINS", default=[
+    "https://www.tonnage-fitness.com",
+    "https://tonnage-fitness.com",
+    "http://localhost:5173"
+])
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
