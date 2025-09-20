@@ -50,3 +50,4 @@ staticfiles/
 # IDE/editor
 .vscode/
 .idea/
+apps/frontend/build-release.sh

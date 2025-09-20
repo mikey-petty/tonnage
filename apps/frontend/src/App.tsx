@@ -8,7 +8,7 @@ function App() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    fetch(`/api/hello/`)
+    fetch(`/api/hello`)
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
       .catch((err) => console.error(err));
@@ -17,7 +17,7 @@ function App() {
   return (
     <>
       <div>
-        <h1>Frontend + Backend Example</h1>
+        <h1>Frontend + Backend Examples</h1>
         <p>{message}</p>
       </div>
       <div>
