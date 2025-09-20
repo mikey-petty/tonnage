@@ -59,7 +59,7 @@ jobs:
 
   e2e-test:
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -115,6 +115,7 @@ jobs:
       - name: Log in to Heroku Container Registry
         run: echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
 
+        # https://stackoverflow.com/questions/79639270/docker-heroku-error-from-registry-unsupported
       - name: Build Docker image
         run: |
           docker buildx build \

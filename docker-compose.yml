@@ -35,8 +35,10 @@ services:
       context: ./apps/backend
       dockerfile: Dockerfile.prod
     container_name: backend-prod
+    environment:
+      - PORT=8000
     ports:
-      - "${DJANGO_PORT}:${DJANGO_PORT}"
+      - "8000:8000"
     restart: always
     env_file:
       - .env
