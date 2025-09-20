@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test("has url", async ({ page }) => {
   await page.route("**/api/hello/", (route) =>
-    route.fulfill({ json: { message: "Hello from mock!" } })
+    route.fulfill({ json: { message: "Hello from mock!" } }),
   );
 
   if (!process.env.PLAYWRIGHT_WEB_URL) {
