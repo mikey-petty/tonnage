@@ -1,0 +1,37 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main
+      - feat/TON-7-init-backend
+
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11" # or match your local dev version
+
+      - name: Install dependencies
+        run: |
+          cd apps/backend
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Run Django tests
+        run: |
+          cd apps/backend
+          source venv/bin/activate
+          python manage.py test
+        env:
+          DEBUG: "False"
+          SECRET_KEY: dummy-secret
+          DJANGO_SETTINGS_MODULE: backend.settings # update to your project
+          ALLOWED_HOSTS: localhost,127.0.0.1
