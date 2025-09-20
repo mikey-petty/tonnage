@@ -4,7 +4,10 @@ on:
   push:
     branches:
       - main
-      - feat/TON-7-init-backend
+
+env:
+  HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+  HEROKU_APP_NAME: ${{secrets.HEROKU_APP_NAME}}
 
 jobs:
   lint:
@@ -53,7 +56,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [lint, test]
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
@@ -62,7 +65,7 @@ jobs:
       - name: Log in to Heroku Container Registry
         run: echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
 
-        # https://stackoverflow.com/questions/79639270/docker-heroku-error-from-registry-unsupported
+      # https://stackoverflow.com/questions/79639270/docker-heroku-error-from-registry-unsupported
       - name: Build Docker image
         run: |
           docker buildx build \
