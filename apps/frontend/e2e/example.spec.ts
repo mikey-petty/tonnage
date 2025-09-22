@@ -1,13 +1,21 @@
 import { test, expect } from "@playwright/test";
 
 test("has url", async ({ page }) => {
-  await page.goto("http://localhost:5173/");
+  await page.route("**/api/hello/", (route) =>
+    route.fulfill({ json: { message: "Hello from mock!" } }),
+  );
 
-  await expect(page).toHaveURL("http://localhost:5173/");
+  if (!process.env.PLAYWRIGHT_WEB_URL) {
+    throw new Error("PLAYWRIGHT_WEB_URL not set");
+  }
 
-  const button = await page.getByTestId("count");
+  await page.goto(process.env.PLAYWRIGHT_WEB_URL);
+  await expect(page).toHaveURL(process.env.PLAYWRIGHT_WEB_URL);
+
+  const button = page.getByTestId("count");
   await expect(button).toHaveText("count is 0");
-  button.click();
+
+  await button.click();
   await expect(button).toHaveText("count is 1");
 
   await page.screenshot({ path: "example.png" });

@@ -20,6 +20,7 @@ export default defineConfig([
         "warn",
         { argsIgnorePattern: "^_" },
       ],
+      "max-len": ["warn", { code: 120 }],
     },
     plugins: { js, prettier, "react-hooks": reactHooks, react: pluginReact },
     extends: [

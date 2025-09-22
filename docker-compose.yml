@@ -1,4 +1,20 @@
 services:
+  backend-dev:
+    profiles: ["dev"]
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile.dev
+    container_name: backend-dev
+    command: python manage.py runserver 0.0.0.0:${DJANGO_PORT}
+    ports:
+      - "${DJANGO_PORT}:${DJANGO_PORT}"
+    env_file:
+      - .env
+    volumes:
+      - ./apps/backend:/app
+    networks:
+      - dev-network
+
   frontend-dev:
     profiles: ["dev"]
     build:
@@ -9,7 +25,34 @@ services:
     volumes:
       - ./apps/frontend:/app
       - /app/node_modules
+    env_file:
+      - .env
+    environment:
+      - VITE_DEV_HOST=0.0.0.0
+      - VITE_DEV_PORT=5173
+      - VITE_HMR_HOST=localhost
+      - VITE_HMR_PORT=5173
+    tty: true
+    stdin_open: true
+    depends_on:
+      - backend-dev
     command: ["npm", "run", "dev", "--", "--host"]
+    networks:
+      - dev-network
+
+  backend-prod:
+    profiles: ["prod"]
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile.prod
+    container_name: backend-prod
+    environment:
+      - PORT=8000
+    ports:
+      - "8000:8000"
+    restart: always
+    env_file:
+      - .env
 
   frontend-prod:
     profiles: ["prod"]
@@ -17,6 +60,14 @@ services:
       context: ./apps/frontend
       dockerfile: Dockerfile.prod
     ports:
-      - "8080:8080"
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     environment:
-      - PORT=8080
+      - FRONTEND_PORT=${FRONTEND_PORT}
+    env_file:
+      - .env
+    depends_on:
+      - backend-prod
+
+networks:
+  dev-network:
+    driver: bridge
