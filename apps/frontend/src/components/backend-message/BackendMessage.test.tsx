@@ -2,6 +2,14 @@ import { render, screen, waitFor } from "@testing-library/react";
 import BackendMessage from "./BackendMessage";
 import { vi } from "vitest";
 
+// Create a proper mock implementation
+const createFetchResponse = (data: { message: string }) => {
+  return {
+    ok: true,
+    json: () => Promise.resolve(data),
+  } as Response;
+};
+
 describe("BackendMessage component", () => {
   beforeEach(() => {
     // Clear all mocks before each test
@@ -11,11 +19,8 @@ describe("BackendMessage component", () => {
   it("renders backend message when API call succeeds", async () => {
     // Mock successful API response
     global.fetch = vi.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ message: "Hello from Django!" }),
-      })
-    ) as any;
+      Promise.resolve(createFetchResponse({ message: "Hello from Django!" })),
+    );
 
     render(<BackendMessage />);
 
