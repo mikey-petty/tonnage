@@ -11,33 +11,53 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
 import environ
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Configure Environment variables
 BASE_DIR = Path(__file__).resolve().parent.parent
 REPO_ROOT_DIR = BASE_DIR.parent.parent
-
 env = environ.Env(DEBUG=(bool, False))
 env.read_env(REPO_ROOT_DIR / ".env")
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-SECRET_KEY = env("DJANGO_SECRET_KEY")
 DEBUG = env("DEBUG")
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
-
-
-# Application definition
-
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
 CSRF_TRUSTED_ORIGINS = env("DJANGO_CSRF_TRUSTED_ORIGINS", default=[
     "https://www.tonnage-fitness.com",
     "https://tonnage-fitness.com",
     "http://localhost:5173"
 ])
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+if not DEBUG:
+  SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
+  SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+  SESSION_COOKIE_SECURE = True
+  CSRF_COOKIE_SECURE = True
+  SESSION_COOKIE_HTTPONLY = True
+  CSRF_COOKIE_HTTPONLY = True
+
+if not DEBUG:
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+
+# CORS configuration
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default=[])
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS'
+]
+CORS_EXPOSE_HEADERS = [
+    'Content-Type',
+    'X-CSRFToken',
+]
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -62,8 +82,6 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
 ]
-
-CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default=[])
 
 ROOT_URLCONF = "backend.urls"
 

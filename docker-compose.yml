@@ -12,6 +12,8 @@ services:
       - .env
     volumes:
       - ./apps/backend:/app
+    networks:
+      - dev-network
 
   frontend-dev:
     profiles: ["dev"]
@@ -25,9 +27,18 @@ services:
       - /app/node_modules
     env_file:
       - .env
+    environment:
+      - VITE_DEV_HOST=0.0.0.0
+      - VITE_DEV_PORT=5173
+      - VITE_HMR_HOST=localhost
+      - VITE_HMR_PORT=5173
+    tty: true
+    stdin_open: true
     depends_on:
       - backend-dev
     command: ["npm", "run", "dev", "--", "--host"]
+    networks:
+      - dev-network
 
   backend-prod:
     profiles: ["prod"]
@@ -56,3 +67,7 @@ services:
       - .env
     depends_on:
       - backend-prod
+
+networks:
+  dev-network:
+    driver: bridge
