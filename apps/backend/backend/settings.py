@@ -22,40 +22,32 @@ env.read_env(REPO_ROOT_DIR / ".env")
 DEBUG = env("DEBUG")
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
-CSRF_TRUSTED_ORIGINS = env("DJANGO_CSRF_TRUSTED_ORIGINS", default=[
-    "https://www.tonnage-fitness.com",
-    "https://tonnage-fitness.com",
-    "http://localhost:5173"
-])
+CSRF_TRUSTED_ORIGINS = env(
+    "DJANGO_CSRF_TRUSTED_ORIGINS",
+    default=["https://www.tonnage-fitness.com", "https://tonnage-fitness.com", "http://localhost:5173"],
+)
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 if not DEBUG:
-  SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
-  SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-  SESSION_COOKIE_SECURE = True
-  CSRF_COOKIE_SECURE = True
-  SESSION_COOKIE_HTTPONLY = True
-  CSRF_COOKIE_HTTPONLY = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = True
 
 if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = 'DENY'
+    X_FRAME_OPTIONS = "DENY"
 
 # CORS configuration
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default=[])
-CORS_ALLOW_METHODS = [
-    'GET',
-    'POST',
-    'PUT',
-    'PATCH',
-    'DELETE',
-    'OPTIONS'
-]
+CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 CORS_EXPOSE_HEADERS = [
-    'Content-Type',
-    'X-CSRFToken',
+    "Content-Type",
+    "X-CSRFToken",
 ]
 
 
