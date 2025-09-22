@@ -12,6 +12,8 @@ services:
       - .env
     volumes:
       - ./apps/backend:/app
+    networks:
+      - dev-network
 
   frontend-dev:
     profiles: ["dev"]
@@ -28,6 +30,8 @@ services:
     depends_on:
       - backend-dev
     command: ["npm", "run", "dev", "--", "--host"]
+    networks:
+      - dev-network
 
   backend-prod:
     profiles: ["prod"]
@@ -56,3 +60,7 @@ services:
       - .env
     depends_on:
       - backend-prod
+
+networks:
+  dev-network:
+    driver: bridge
