@@ -3,6 +3,7 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import BackendMessage from "./components/backend-message/BackendMessage";
+import SQLiteMessage from "./components/sqlite-message/SQLiteMessage";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -12,6 +13,7 @@ function App() {
       <div>
         <h1>Frontend + Backend Examples</h1>
         <BackendMessage />
+        <SQLiteMessage />
       </div>
       <div>
         <a href="https://vite.dev" target="_blank" rel="noreferrer">

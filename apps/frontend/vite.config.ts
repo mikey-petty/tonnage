@@ -5,6 +5,10 @@ import react from "@vitejs/plugin-react-swc";
 export default defineConfig({
   plugins: [react()],
   server: {
+    headers: {
+      "Cross-Origin-Opener-Policy": "same-origin", // For SQLite WebAssembly
+      "Cross-Origin-Embedder-Policy": "require-corp", // For SQLite WebAssembly
+    },
     host: process.env.VITE_DEV_HOST || "0.0.0.0",
     port: parseInt(process.env.VITE_DEV_PORT || "5173", 10),
     watch: {
@@ -21,5 +25,8 @@ export default defineConfig({
         secure: false,
       },
     },
+  },
+  optimizeDeps: {
+    exclude: ["@sqlite.org/sqlite-wasm"],
   },
 });
