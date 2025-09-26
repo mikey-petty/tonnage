@@ -1,5 +1,8 @@
 // In `worker.js`.
-import sqlite3InitModule, { type Sqlite3Static } from "@sqlite.org/sqlite-wasm";
+import sqlite3InitModule, {
+  Database,
+  type Sqlite3Static,
+} from "@sqlite.org/sqlite-wasm";
 
 const log = console.log;
 const error = console.error;
@@ -22,48 +25,22 @@ const start = (sqlite3: Sqlite3Static) => {
   return db;
 };
 
-const createTables = (db: any) => {
+const createTables = (db: Database) => {
   log("Creating database tables...");
 
-  // Create workouts table
+  // Create messages table
   db.exec(`
-    CREATE TABLE IF NOT EXISTS workouts (
+    CREATE TABLE IF NOT EXISTS messages (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      date TEXT NOT NULL,
-      notes TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
-  // Create exercises table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS exercises (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      workout_id INTEGER NOT NULL,
-      name TEXT NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (workout_id) REFERENCES workouts (id) ON DELETE CASCADE
-    )
-  `);
-
-  // Create sets table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS sets (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      exercise_id INTEGER NOT NULL,
-      weight REAL,
-      reps INTEGER,
-      rest_seconds INTEGER,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (exercise_id) REFERENCES exercises (id) ON DELETE CASCADE
+      content TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
 
   log("Database tables created successfully");
 };
 
-export const initializeSQLite = async () => {
+export const initializeSQLite = async (): Promise<Database> => {
   try {
     log("Loading and initializing SQLite3 module...");
     const sqlite3 = await sqlite3InitModule({ print: log, printErr: error });

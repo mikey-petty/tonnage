@@ -17,6 +17,8 @@ services:
 
   frontend-dev:
     profiles: ["dev"]
+    depends_on:
+      - backend-dev
     build:
       context: ./apps/frontend
       dockerfile: Dockerfile.dev
@@ -34,8 +36,7 @@ services:
       - VITE_HMR_PORT=5173
     tty: true
     stdin_open: true
-    depends_on:
-      - backend-dev
+
     command: ["npm", "run", "dev", "--", "--host"]
     networks:
       - dev-network

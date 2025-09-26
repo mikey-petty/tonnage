@@ -1,68 +1,45 @@
 import React, { useState } from "react";
 import { initializeSQLite } from "../../storage/database";
+import type { Database } from "@sqlite.org/sqlite-wasm";
 
-let sqliteInstance: any;
-
-export async function initSQLite() {
-  if (sqliteInstance) {
-    return sqliteInstance;
-  } else {
-    sqliteInstance = await initializeSQLite();
-    return sqliteInstance;
-  }
-}
+let sqliteDB: Database | null = null;
 
 export default function SQLiteMessage() {
   const [message, setMessage] = useState<string>("No Message Yet");
   const [version, setVersion] = useState<string>("No Version Info Yet");
   const [error, setError] = useState<string | null>(null);
 
-  const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget.form!);
-    const inputMessage = formData.get("message") as string;
+  const storeMessage = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     try {
-      const database = await initSQLite();
-      const versionResult = database.exec({
-        sql: "SELECT sqlite_version() as version",
-        returnValue: "resultRows",
-        rowMode: "object",
+      sqliteDB = sqliteDB ?? (await initializeSQLite());
+      const input = document.getElementById("message") as HTMLInputElement;
+      const userMessage = input.value || "NO MESSAGE REALLY?!";
+      sqliteDB.exec({
+        sql: "INSERT INTO messages (content) VALUES (?)",
+        bind: [userMessage],
       });
-
-      database.exec({
-        sql: "INSERT INTO workouts (date, notes) VALUES (date('now'), ?)",
-        bind: [inputMessage],
-      });
-
-      const version = versionResult[0]?.version || "Unknown Version";
-      setVersion(String(version));
-      console.log("SQLite Message button clicked");
     } catch (error) {
-      setError("Failed to retrieve SQLite version");
-      console.error("Error fetching SQLite version:", error);
+      console.error("Error initializing SQLite:", error);
+      setError("Failed to initialize SQLite");
     }
   };
 
-  const handleMessageClick = async (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
+  const getMessage = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     try {
-      const database = await initSQLite();
-      const userInput = "Mikey Notes";
-      const result = database.exec({
-        sql: "SELECT * FROM workouts WHERE notes = ?",
-        bind: [userInput],
+      sqliteDB = sqliteDB ?? (await initializeSQLite());
+      const input = document.getElementById("getMessage") as HTMLInputElement;
+      const result = sqliteDB.exec({
+        sql: "SELECT * FROM messages WHERE content = ? LIMIT 1",
+        bind: [input.value],
         returnValue: "resultRows",
-        rowMode: "object",
       });
-      const inputMessage = result[0]?.notes || "No Message Found";
-      console.log(result);
-      setMessage(String(inputMessage));
-      console.log("SQLite Message button clicked");
+      const msg = result?.[0]?.[1];
+      setMessage(msg ? String(msg) : "No Message Found");
     } catch (error) {
-      setError("Failed to retrieve SQLite version");
-      console.error("Error fetching SQLite version:", error);
+      console.error("Error initializing SQLite:", error);
+      setError("Failed to initialize SQLite: " + (error as Error).message);
     }
   };
 
@@ -71,14 +48,18 @@ export default function SQLiteMessage() {
       style={{ padding: "20px", border: "1px solid #ccc", borderRadius: "5px" }}
     >
       <h3>SQLite Hello World</h3>
+      <button onClick={storeMessage}>Initialize SQLite</button>
+
       <p>
         <strong>Message:</strong> {message}
       </p>
+
       {version && (
         <p>
           <strong>SQLite Version:</strong> {version}
         </p>
       )}
+
       {error && (
         <p style={{ color: "red" }}>
           <strong>Error:</strong> {error}
@@ -94,11 +75,22 @@ export default function SQLiteMessage() {
           name="message"
           placeholder="Enter your message"
         />
-        <button type="submit" onClick={handleClick}>
+        <button type="submit" onClick={storeMessage}>
           Submit
         </button>
       </form>
-      <button onClick={handleMessageClick}>Get Message from SQLite</button>
+      <form>
+        <label htmlFor="message">Message from SQLite: </label>
+        <input
+          type="text"
+          id="getMessage"
+          name="message"
+          placeholder="Enter your message"
+        />
+        <button type="submit" onClick={getMessage}>
+          Get Message
+        </button>
+      </form>
     </div>
   );
 }
