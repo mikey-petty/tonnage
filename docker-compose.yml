@@ -30,14 +30,12 @@ services:
     env_file:
       - .env
     environment:
-      - VITE_DEV_HOST=0.0.0.0
-      - VITE_DEV_PORT=5173
-      - VITE_HMR_HOST=localhost
-      - VITE_HMR_PORT=5173
+      - CHOKIDAR_USEPOLLING=true # Enable file watching
+      - WATCHPACK_POLLING=true # Webpack polling
     tty: true
     stdin_open: true
-
-    command: ["npm", "run", "dev", "--", "--host"]
+    # Fixed command with proper host binding
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
     networks:
       - dev-network
 
