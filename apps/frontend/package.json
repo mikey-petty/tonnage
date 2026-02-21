@@ -9,7 +9,6 @@
     "lint": "eslint .",
     "type-check": "npx tsc --build --force",
     "format:check": "prettier --check .",
-    "test": "npm run test",
     "test:unit": "npx vitest run",
     "test:e2e": "npx playwright test",
     "preview": "vite preview"
